@@ -1,0 +1,33 @@
+[project]
+name = "whooshtogarmin"
+version = "0.1.0"
+description = "Sync myWhoosh activities to Garmin Connect"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fit-tool>=0.9.13",
+    "garth>=0.4.46",
+    "httpx>=0.27",
+    "playwright>=1.44",
+    "tenacity>=8.2",
+    "pydantic-settings>=2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "fitparse>=1.2",
+]
+
+[project.scripts]
+whooshtogarmin = "whooshtogarmin.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["whooshtogarmin*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
