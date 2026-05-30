@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fit-tool>=0.9.13",
-    "garth>=0.4.46",
+    "garminconnect>=0.3.2",
+    "curl_cffi>=0.7",
+    "ua-generator>=1.0",
     "httpx>=0.27",
     "playwright>=1.44",
     "tenacity>=8.2",
