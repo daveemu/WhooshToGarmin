@@ -1,0 +1,33 @@
+# Podman Quadlet unit for rootless systemd (--user).
+#
+# Install:
+#   1. podman build -t whooshtogarmin:latest .
+#   2. mkdir -p ~/.local/share/whooshtogarmin ~/.config/whooshtogarmin
+#   3. cp deploy/whooshtogarmin.container ~/.config/containers/systemd/
+#   4. cp deploy/whooshtogarmin.env.example ~/.config/whooshtogarmin/whooshtogarmin.env  (edit it)
+#   5. Run both bootstraps once (writes session.json + garmin_tokens/ into the data dir):
+#        python scripts/bootstrap_mywhoosh.py --out ~/.local/share/whooshtogarmin/session.json
+#        python scripts/bootstrap_login.py    --tokenstore ~/.local/share/whooshtogarmin/garmin_tokens
+#   6. systemctl --user daemon-reload && systemctl --user start whooshtogarmin
+#   7. (optional) loginctl enable-linger "$USER"   # keep it running after logout
+#
+# Watch logs: journalctl --user -u whooshtogarmin -f
+
+[Unit]
+Description=myWhoosh -> Garmin Connect sync
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=localhost/whooshtogarmin:latest
+# Persistent state volume (session token, garmin tokens, sync state, downloads).
+# No :Z label — Arch typically runs without SELinux.
+Volume=%h/.local/share/whooshtogarmin:/data
+EnvironmentFile=%h/.config/whooshtogarmin/whooshtogarmin.env
+
+[Service]
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target
